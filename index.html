@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comedero Automático Pro - Panel de Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Encabezado de la Aplicación -->
+        <header class="main-header">
+            <div class="brand">
+                <span class="icon">🐶</span>
+                <div>
+                    <h1 id="headerPetName">Comedero Mascota</h1>
+                    <p class="subtitle">Panel de Control Inteligente ESP32</p>
+                </div>
+            </div>
+            <div class="connection-badge" id="connBadge">
+                <span class="status-dot"></span>
+                <span id="connStatusText">Conectando...</span>
+            </div>
+        </header>
+
+        <!-- Selector de IP para GitHub Pages -->
+        <section class="card ip-selector-card">
+            <div class="ip-selector-group">
+                <label for="deviceIpInput"><strong>Dirección IP del ESP32:</strong></label>
+                <div class="input-with-button">
+                    <input type="text" id="deviceIpInput" value="192.168.4.1" placeholder="Ej: 192.168.4.1 o 192.168.1.50">
+                    <button class="btn btn-secondary" id="btnConnectIp">Conectar</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Grid Principal del Dashboard -->
+        <main class="dashboard-grid">
+
+            <!-- Tarjeta de Estado Actual -->
+            <section class="card status-card">
+                <h2>📊 Estado del Dispositivo</h2>
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <span class="metric-label">Hora RTC</span>
+                        <span class="metric-value" id="valCurrentTime">--:--:--</span>
+                        <span class="metric-sub" id="valCurrentDate">----/--/--</span>
+                    </div>
+                    <div class="metric-box highlight">
+                        <span class="metric-label">Próxima Alimentación</span>
+                        <span class="metric-value" id="valNextSchedule">--:--</span>
+                        <span class="metric-sub">Programada</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-label">Total Alimentaciones</span>
+                        <span class="metric-value" id="valTotalFeeds">0</span>
+                        <span class="metric-sub">Dispensados</span>
+                    </div>
+                </div>
+
+                <div class="status-tags">
+                    <span class="tag" id="tagRtc">RTC: OK</span>
+                    <span class="tag" id="tagOled">OLED: OK</span>
+                    <span class="tag" id="tagWifi">Wi-Fi: AP</span>
+                    <span class="tag" id="tagMotor">Motor: IDLE</span>
+                </div>
+            </section>
+
+            <!-- Tarjeta de Alimentación Manual Rápidas -->
+            <section class="card action-card">
+                <h2>🍖 Alimentación Manual</h2>
+                <p>Dispensar porciones de comida inmediatamente:</p>
+                <div class="feed-action-group">
+                    <div class="portion-selector">
+                        <label for="manualPortions">Porciones:</label>
+                        <select id="manualPortions">
+                            <option value="1" selected>1 Porción</option>
+                            <option value="2">2 Porciones</option>
+                            <option value="3">3 Porciones</option>
+                            <option value="4">4 Porciones</option>
+                            <option value="5">5 Porciones</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary btn-large" id="btnFeedNow">
+                        <span class="btn-icon">⚡</span> ¡Alimentar Ahora!
+                    </button>
+                </div>
+                <div id="feedProgressContainer" class="progress-bar-wrap hidden">
+                    <div class="progress-info">
+                        <span>Dispensando...</span>
+                        <span id="feedProgressText">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="feedProgressFill"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tarjeta de Horarios Programados -->
+            <section class="card full-width">
+                <div class="card-header-flex">
+                    <h2>⏰ Horarios de Alimentación</h2>
+                    <button class="btn btn-sm btn-secondary" id="btnRefreshSchedules">🔄 Actualizar</button>
+                </div>
+                <div class="schedules-list" id="schedulesContainer">
+                    <!-- Los horarios se cargan dinámicamente -->
+                    <p class="loading-text">Cargando programación...</p>
+                </div>
+            </section>
+
+            <!-- Sincronización de Hora -->
+            <section class="card">
+                <h2>🕒 Sincronizar Reloj RTC</h2>
+                <p>Ajustar la fecha y hora del DS3231 directamente desde tu teléfono:</p>
+                <button class="btn btn-secondary w-100" id="btnSyncTime">
+                    📱 Sincronizar Hora del Celular
+                </button>
+            </section>
+
+            <!-- Configuración Wi-Fi -->
+            <section class="card">
+                <h2>📶 Configuración Wi-Fi</h2>
+                <form id="wifiForm" class="form-grid">
+                    <div class="form-group">
+                        <label for="wifiSsid">Nombre de Red (SSID):</label>
+                        <input type="text" id="wifiSsid" placeholder="MiRedWiFi">
+                    </div>
+                    <div class="form-group">
+                        <label for="wifiPass">Contraseña:</label>
+                        <input type="password" id="wifiPass" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Credenciales Wi-Fi</button>
+                </form>
+            </section>
+
+            <!-- Ajustes Generales -->
+            <section class="card">
+                <h2>⚙️ Ajustes del Dispositivo</h2>
+                <form id="configForm" class="form-grid">
+                    <div class="form-group">
+                        <label for="petNameInput">Nombre de la Mascota:</label>
+                        <input type="text" id="petNameInput" placeholder="Max">
+                    </div>
+                    <div class="form-group">
+                        <label for="stepsInput">Pasos por Porción (Calibración):</label>
+                        <input type="number" id="stepsInput" min="100" max="5000" placeholder="512">
+                        <small class="help-text">Predeterminado: 512 pasos (~90° giro)</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Ajustes</button>
+                </form>
+            </section>
+
+            <!-- Historial de Alimentaciones -->
+            <section class="card full-width">
+                <h2>📜 Historial de Alimentaciones</h2>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha y Hora</th>
+                                <th>Porciones</th>
+                                <th>Tipo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <tr>
+                                <td colspan="3" class="text-center">Sin registros aún</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <p>Comedero Automático Pro ESP32 &bull; Sistema Offline-First Tolerante a Fallos</p>
+        </footer>
+    </div>
+
+    <!-- Notificación Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
