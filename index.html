@@ -2,7 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0f1c">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Panel de control del Comedero Automático Pro para mascotas, ESP32.">
     <title>Comedero Automático Pro - Panel de Control</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -130,11 +135,11 @@
                 <form id="wifiForm" class="form-grid">
                     <div class="form-group">
                         <label for="wifiSsid">Nombre de Red (SSID):</label>
-                        <div class="input-with-button" style="display: flex; gap: 10px; width: 100%;">
-                            <select id="wifiSsidSelect" style="flex: 1; padding: var(--spacing-sm); border: 1px solid var(--border-color); border-radius: var(--radius-sm); background-color: var(--surface-light); color: var(--text-main);">
+                        <div class="wifi-row">
+                            <select id="wifiSsidSelect">
                                 <option value="">-- Escanea para ver redes --</option>
                             </select>
-                            <input type="text" id="wifiSsid" placeholder="Otra red..." style="flex: 1;">
+                            <input type="text" id="wifiSsid" placeholder="Otra red...">
                         </div>
                     </div>
                     <div class="form-group">
@@ -160,7 +165,7 @@
                     </div>
                     <div class="form-group">
                         <label for="speedInput">Velocidad del Motor (Retardo): <span id="speedValueLabel">2ms/paso</span></label>
-                        <input type="range" id="speedInput" min="1" max="10" value="2" step="1" style="width: 100%;">
+                        <input type="range" id="speedInput" min="1" max="10" value="2" step="1">
                         <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: var(--text-muted);">
                             <span>Rápido (1ms)</span>
                             <span>Lento (10ms)</span>
