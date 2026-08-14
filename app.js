@@ -38,8 +38,17 @@ const wifiForm = document.getElementById('wifiForm');
 const btnScanWiFi = document.getElementById('btnScanWiFi');
 const wifiSsidSelect = document.getElementById('wifiSsidSelect');
 const configForm = document.getElementById('configForm');
+const speedInput = document.getElementById('speedInput');
+const speedValueLabel = document.getElementById('speedValueLabel');
 const historyTableBody = document.getElementById('historyTableBody');
 const toast = document.getElementById('toast');
+
+// Actualizar etiqueta del slider en tiempo real
+if (speedInput && speedValueLabel) {
+    speedInput.addEventListener('input', (e) => {
+        speedValueLabel.textContent = `${e.target.value}ms/paso`;
+    });
+}
 
 // Utilitario de Notificaciones Toast
 function showToast(message, isError = false) {
@@ -301,10 +310,12 @@ configForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const petName = document.getElementById('petNameInput').value.trim();
     const stepsPerPortion = parseInt(document.getElementById('stepsInput').value);
+    const motorSpeedMs = parseInt(speedInput.value);
 
     const payload = {};
     if (petName) payload.petName = petName;
     if (!isNaN(stepsPerPortion)) payload.stepsPerPortion = stepsPerPortion;
+    if (!isNaN(motorSpeedMs)) payload.motorSpeedMs = motorSpeedMs;
 
     try {
         const response = await fetch(`${getBaseUrl()}/api/config`, {
@@ -356,6 +367,10 @@ async function fetchDeviceConfig() {
         const cfg = await response.json();
         if (cfg.petName) document.getElementById('petNameInput').value = cfg.petName;
         if (cfg.stepsPerPortion) document.getElementById('stepsInput').value = cfg.stepsPerPortion;
+        if (cfg.motorSpeedMs && speedInput) {
+            speedInput.value = cfg.motorSpeedMs;
+            if (speedValueLabel) speedValueLabel.textContent = `${cfg.motorSpeedMs}ms/paso`;
+        }
         if (cfg.wifiSsid) document.getElementById('wifiSsid').value = cfg.wifiSsid;
     } catch (err) {}
 }
