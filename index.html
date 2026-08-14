@@ -155,8 +155,16 @@
                     </div>
                     <div class="form-group">
                         <label for="stepsInput">Pasos por Porción (Calibración):</label>
-                        <input type="number" id="stepsInput" min="100" max="5000" placeholder="512">
+                        <input type="number" id="stepsInput" min="100" max="10000" placeholder="512">
                         <small class="help-text">Predeterminado: 512 pasos (~90° giro)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="speedInput">Velocidad del Motor (Retardo): <span id="speedValueLabel">2ms/paso</span></label>
+                        <input type="range" id="speedInput" min="1" max="10" value="2" step="1" style="width: 100%;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: var(--text-muted);">
+                            <span>Rápido (1ms)</span>
+                            <span>Lento (10ms)</span>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Guardar Ajustes</button>
                 </form>
