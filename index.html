@@ -20,7 +20,7 @@
         <header class="main-header">
             <div class="brand">
                 <span class="icon">🐶</span>
-                <div>
+                <div class="brand-text">
                     <h1 id="headerPetName">Comedero Mascota</h1>
                     <p class="subtitle">Panel de Control Inteligente ESP32</p>
                 </div>
@@ -47,19 +47,25 @@
 
             <!-- Tarjeta de Estado Actual -->
             <section class="card status-card">
-                <h2>📊 Estado del Dispositivo</h2>
+                <div class="card-header-flex">
+                    <h2>📊 Estado del Dispositivo</h2>
+                    <button class="btn btn-icon-only btn-secondary" id="btnRefreshStatus" type="button" title="Refrescar estado" onclick="fetchStatus()">🔄</button>
+                </div>
                 <div class="metrics-grid">
                     <div class="metric-box">
+                        <span class="metric-icon">🕒</span>
                         <span class="metric-label">Hora RTC</span>
                         <span class="metric-value" id="valCurrentTime">--:--:--</span>
                         <span class="metric-sub" id="valCurrentDate">----/--/--</span>
                     </div>
                     <div class="metric-box highlight">
+                        <span class="metric-icon">🍖</span>
                         <span class="metric-label">Próxima Alimentación</span>
                         <span class="metric-value" id="valNextSchedule">--:--</span>
                         <span class="metric-sub">Programada</span>
                     </div>
                     <div class="metric-box">
+                        <span class="metric-icon">📦</span>
                         <span class="metric-label">Total Alimentaciones</span>
                         <span class="metric-value" id="valTotalFeeds">0</span>
                         <span class="metric-sub">Dispensados</span>
@@ -166,7 +172,7 @@
                     <div class="form-group">
                         <label for="speedInput">Velocidad del Motor (Retardo): <span id="speedValueLabel">2ms/paso</span></label>
                         <input type="range" id="speedInput" min="1" max="10" value="2" step="1">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: var(--text-muted);">
+                        <div class="speed-range-labels">
                             <span>Rápido (1ms)</span>
                             <span>Lento (10ms)</span>
                         </div>
