@@ -123,16 +123,25 @@
             <!-- Configuración Wi-Fi -->
             <section class="card">
                 <h2>📶 Configuración Wi-Fi</h2>
+                <p>Conecta el dispositivo a tu red Wi-Fi local.</p>
+                <div class="form-group">
+                    <button type="button" class="btn btn-secondary w-100" id="btnScanWiFi">🔍 Escanear Redes Disponibles</button>
+                </div>
                 <form id="wifiForm" class="form-grid">
                     <div class="form-group">
                         <label for="wifiSsid">Nombre de Red (SSID):</label>
-                        <input type="text" id="wifiSsid" placeholder="MiRedWiFi">
+                        <div class="input-with-button" style="display: flex; gap: 10px; width: 100%;">
+                            <select id="wifiSsidSelect" style="flex: 1; padding: var(--spacing-sm); border: 1px solid var(--border-color); border-radius: var(--radius-sm); background-color: var(--surface-light); color: var(--text-main);">
+                                <option value="">-- Escanea para ver redes --</option>
+                            </select>
+                            <input type="text" id="wifiSsid" placeholder="Otra red..." style="flex: 1;">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="wifiPass">Contraseña:</label>
                         <input type="password" id="wifiPass" placeholder="••••••••">
                     </div>
-                    <button type="submit" class="btn btn-primary">Guardar Credenciales Wi-Fi</button>
+                    <button type="submit" class="btn btn-primary">Guardar y Conectar Wi-Fi</button>
                 </form>
             </section>
 
