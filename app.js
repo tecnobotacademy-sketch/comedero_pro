@@ -35,6 +35,8 @@ const btnRefreshSchedules = document.getElementById('btnRefreshSchedules');
 const btnSyncTime = document.getElementById('btnSyncTime');
 
 const wifiForm = document.getElementById('wifiForm');
+const btnScanWiFi = document.getElementById('btnScanWiFi');
+const wifiSsidSelect = document.getElementById('wifiSsidSelect');
 const configForm = document.getElementById('configForm');
 const historyTableBody = document.getElementById('historyTableBody');
 const toast = document.getElementById('toast');
@@ -224,6 +226,46 @@ btnSyncTime.addEventListener('click', async () => {
         }
     } catch (err) {
         showToast("Error de conexión", true);
+    }
+});
+
+// Escanear Redes Wi-Fi (/api/wifi/scan)
+btnScanWiFi.addEventListener('click', async () => {
+    btnScanWiFi.disabled = true;
+    btnScanWiFi.textContent = '⏳ Escaneando redes... (Toma unos segundos)';
+    wifiSsidSelect.innerHTML = '<option value="">-- Escaneando... --</option>';
+
+    try {
+        const response = await fetch(`${getBaseUrl()}/api/wifi/scan`);
+        if (!response.ok) throw new Error('Error en escaneo');
+        const networks = await response.json();
+
+        wifiSsidSelect.innerHTML = '<option value="">-- Selecciona una red --</option>';
+        if (networks.length === 0) {
+            wifiSsidSelect.innerHTML = '<option value="">-- No se encontraron redes --</option>';
+        } else {
+            networks.forEach(net => {
+                const lock = net.secure ? '🔒' : '🔓';
+                const opt = document.createElement('option');
+                opt.value = net.ssid;
+                opt.textContent = `${lock} ${net.ssid} (${net.rssi} dBm)`;
+                wifiSsidSelect.appendChild(opt);
+            });
+        }
+        showToast(`Escaneo completo: ${networks.length} redes encontradas.`);
+    } catch (err) {
+        showToast("Error al escanear redes", true);
+        wifiSsidSelect.innerHTML = '<option value="">-- Error al escanear --</option>';
+    } finally {
+        btnScanWiFi.disabled = false;
+        btnScanWiFi.textContent = '🔍 Escanear Redes Disponibles';
+    }
+});
+
+// Al seleccionar una red del dropdown, pasarlo al input
+wifiSsidSelect.addEventListener('change', (e) => {
+    if (e.target.value) {
+        document.getElementById('wifiSsid').value = e.target.value;
     }
 });
 
